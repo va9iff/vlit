@@ -1839,7 +1839,7 @@ export {
 const PascalToKebab = str =>
 	(str[0] + str.substring(1).replace(/[A-Z]/g, s => `-${s}`)).toLowerCase()
 
-const livingVLits = []
+const livingVLitElements = []
 
 let _state = {}
 
@@ -1852,7 +1852,7 @@ export const state = new Proxy(
 		set(obj, prop, value) {
 			if (!_state.hasOwnProperty(prop)) console.error(`put ${prop} in the defineState() call before setting it`)
 			_state[prop] = value
-			for (const vlit of livingVLits){
+			for (const vlit of livingVLitElements){
 				vlit.requestUpdate()
 			}
 			return 1
@@ -1865,7 +1865,7 @@ export const init = initialState => {
 	return state
 }
 
-export class VLit extends ct /*LitElement*/ {
+export class VLitElement extends ct /*LitElement*/ {
 	static observes = []
 	static props = ({}) => ({})
 	static shadow = false
@@ -1876,13 +1876,13 @@ export class VLit extends ct /*LitElement*/ {
 	}
 	connectedCallback(){
 		super.connectedCallback(...arguments)
-		livingVLits.push(this)
+		livingVLitElements.push(this)
 	}
 	disconnectedCallback(){
 		super.disconnectedCallback(...arguments)
-		let index = livingVLits.indexOf(this);
+		let index = livingVLitElements.indexOf(this);
 		if (index !== -1) {
-		  livingVLits.splice(index, 1);
+		  livingVLitElements.splice(index, 1);
 		}
 	}
 	constructor(){
@@ -1912,6 +1912,6 @@ export class VLit extends ct /*LitElement*/ {
 }
 
 export {
-	VLit as V, 
+	VLitElement as V, 
 	I /*html*/ as v
 }

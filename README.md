@@ -9,13 +9,13 @@ lit that is optimized to build things rapidly without ts.
 let's look at the syntax it gives us
 
 ```js
-import {VLit, html, init} from "./vlit.js"
+import {VLitElement, html, init} from "./vlit.js"
 
 const state = init({
 	s: 2
 })
 
-class MyMain extends VLit {
+class MyMain extends VLitElement {
 	render(){
 		return html`
 			<my-pair></my-pair>
@@ -25,7 +25,7 @@ class MyMain extends VLit {
 }
 MyMain.done
 
-class MyPair extends VLit {
+class MyPair extends VLitElement {
 	static props = ({
 		s 	  // observes global
 	}) => ({
@@ -75,3 +75,6 @@ probable faqs:
 	observe the state and define your tag. so you must `.done` after defining 
 	a class. 
 	(currently no way to pass other arguments to `customElements.define()`)
+
+also `VLitElement` is exported as `V` and `html` is exported as `v` if you're 
+a lazy typer or don't want a 4 letter prefix when using in template literals

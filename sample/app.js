@@ -1,10 +1,10 @@
-import {VLit, html, init} from "../vlit.js"
+import {VLitElement, html, init} from "../vlit.js"
 
 const state = init({
 	s: 2
 })
 
-class MyMain extends VLit {
+class MyMain extends VLitElement {
 	render(){
 		return html`
 			<my-pair></my-pair>
@@ -14,7 +14,7 @@ class MyMain extends VLit {
 }
 MyMain.done
 
-class MyPair extends VLit {
+class MyPair extends VLitElement {
 	static props = ({
 		s 	  // observes global
 	}) => ({
