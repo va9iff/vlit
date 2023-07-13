@@ -1,7 +1,7 @@
 Lit is a great library but its js api is kinda messed up. I made a version of 
 lit that is optimized to build things rapidly without ts. 
 
-### It's the same lit with:
+# features
 
 - tag name is automatically set to the class name in kebab case 
 - global state with simple syntax
