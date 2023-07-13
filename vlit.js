@@ -1865,12 +1865,9 @@ export const init = initialState => {
 	return state
 }
 
-window.livingVLits = livingVLits
-
 export class VLit extends ct /*LitElement*/ {
-	static props = ({}) => ({
-		count: 0
-	})
+	static observes = []
+	static props = ({}) => ({})
 	static shadow = false
 	createRenderRoot() {
 		if (this.constructor.shadow) 
@@ -1888,34 +1885,37 @@ export class VLit extends ct /*LitElement*/ {
 		  livingVLits.splice(index, 1);
 		}
 	}
-	static get done() {
-		const ShadowClass = class extends this {
-			static observes = []
-			static properties = {}
-			constructor(){
-				super()
-				for (const p in this.constructor.props(stateSeeker)){
-					this[p] = props[p]
-				}
-				// for (const o of this.constructor.observes){
-					// this[o] = _state[o]
-				// }
-			}
+	constructor(){
+		super()
+		// deconstructed arguments will be undefined and are useless anymore
+		// we'll use them only in .done
+		let props = this.constructor.props({})
+		for (const p in props){
+			this[p] = props[p]
 		}
+	}
+	static get done() {
+		const that = this
+		this.properties = {...this.properties}
 
+		// proxy to trigger get() with argument deconstruction
 		const stateSeeker = new Proxy( {}, {
 			get(obj, prop) {
-				ShadowClass.observes.push(prop)
-				ShadowClass.properties[prop] = {}
+				that.observes.push(prop)
+				that.properties[prop] = {}
 			},
 		})
 		const props = this.props(stateSeeker) 
-		const properties = {}
 		for (const p in props){
-			properties[p] = {}
+			this.properties[p] = {}
 		}
-		ShadowClass.properties = properties
-		console.log(PascalToKebab(this.name))
-		customElements.define(PascalToKebab(this.name), ShadowClass) // assign custom element to a tag
+		customElements.define(PascalToKebab(this.name), this)
 	}
 }
+
+export {
+	VLit as V, 
+	I /*html*/ as v
+}
+
+export default class Madrid{}

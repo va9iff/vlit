@@ -1,11 +1,11 @@
-import {VLit, html, init} from "./vlit.js"
+import {V, v, init} from "./vlit.js"
 
 // global state
 const state = init({
 	s: 2
 })
 
-class MyMain extends VLit{
+class MyMain extends V{
 	static props = ({
 		// observes global
 		s
@@ -14,7 +14,7 @@ class MyMain extends VLit{
 		k: 0,
 	})
 	render(){
-		return html`
+		return v`
 			<button @click=${e => this.k++}>prop ${this.k}</button>
 			<button @click=${e => state.s++}>state ${state.s}</button>
 			<button @click=${e=> this.remove()}>-</button>
