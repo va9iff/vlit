@@ -90,3 +90,10 @@ probable faqs:
 
 also `VLitElement` is exported as `V` and `html` is exported as `v` if you're
 a lazy typer or don't want a 4 letter prefix when using in template literals
+
+---
+
+_I know it's a bit disgusting to see deconstructed properties from an 
+argument that aren't gonna be used but I just didn't want to write observing 
+state property names just in strings. Indeed it does look elegant to me - being 
+before the default property values and it has no default cuz uses the global._
