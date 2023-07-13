@@ -1,4 +1,4 @@
-import {VLit, html, init} from "./vlit.js"
+import {VLit, html, init} from "../vlit.js"
 
 const state = init({
 	s: 2
