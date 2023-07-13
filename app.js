@@ -1,29 +1,31 @@
-import {V, v, init} from "./vlit.js"
+import {VLit, html, init} from "./vlit.js"
 
-// global state
 const state = init({
 	s: 2
 })
 
-class MyMain extends V{
+class MyMain extends VLit {
+	render(){
+		return html`
+			<my-pair></my-pair>
+			<my-pair></my-pair>
+			<my-pair></my-pair>`
+	}
+}
+MyMain.done
+
+class MyPair extends VLit {
 	static props = ({
-		// observes global
-		s
+		s 	  // observes global
 	}) => ({
-		// local state
-		k: 0,
+		k: 0, // property
 	})
 	render(){
-		return v`
+		return html`
 			<button @click=${e => this.k++}>prop ${this.k}</button>
-			<button @click=${e => state.s++}>state ${state.s}</button>
-			<button @click=${e=> this.remove()}>-</button>
-			<button @click=${e=>{
-				document.body.appendChild(document.createElement("my-main"))
-			}}>+</button>
-			<br>
+			<button @click=${e => state.s++}>state ${state.s}</button> <br>
 			`
 	}
 }
+MyPair.done
 
-MyMain.done

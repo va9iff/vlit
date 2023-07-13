@@ -1887,8 +1887,6 @@ export class VLit extends ct /*LitElement*/ {
 	}
 	constructor(){
 		super()
-		// deconstructed arguments will be undefined and are useless anymore
-		// we'll use them only in .done
 		let props = this.constructor.props({})
 		for (const p in props){
 			this[p] = props[p]
@@ -1907,7 +1905,7 @@ export class VLit extends ct /*LitElement*/ {
 		})
 		const props = this.props(stateSeeker) 
 		for (const p in props){
-			this.properties[p] = {}
+			this.properties[p] ??= {}
 		}
 		customElements.define(PascalToKebab(this.name), this)
 	}
@@ -1917,5 +1915,3 @@ export {
 	VLit as V, 
 	I /*html*/ as v
 }
-
-export default class Madrid{}
