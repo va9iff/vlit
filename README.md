@@ -1,8 +1,10 @@
 Lit is a great library but its js api is kinda messed up. I made a version of 
 lit that is optimized to build things rapidly without ts. 
 
+### It's the same lit with:
+
 - tag name is automatically set to the class name in kebab case 
-- global state
+- global state with simple syntax
 - declare reactive properties and set defaults in the same place
 - (no shadow dom by default (just add `static shadow = true`))
 
@@ -20,16 +22,17 @@ class MyMain extends VLitElement {
 		return html`
 			<my-pair></my-pair>
 			<my-pair></my-pair>
-			<my-pair></my-pair>`
+			<my-pair></my-pair>
+		`
 	}
 }
 MyMain.done
 
 class MyPair extends VLitElement {
 	static props = ({
-		s 	  // observes global
+		s		// observes global
 	}) => ({
-		k: 0, // property
+		k: 0,	// property
 	})
 	render(){
 		return html`
@@ -75,6 +78,11 @@ probable faqs:
 	observe the state and define your tag. so you must `.done` after defining 
 	a class. 
 	(currently no way to pass other arguments to `customElements.define()`)
+
+- should I deconstruct what properties of state the element observes?  
+	no. if the parent element has `s` then all its inherited classes will 
+	update when `state.s` is set. but for the default properties yes you 
+	should. the best way is to make another function and use .
 
 also `VLitElement` is exported as `V` and `html` is exported as `v` if you're 
 a lazy typer or don't want a 4 letter prefix when using in template literals
