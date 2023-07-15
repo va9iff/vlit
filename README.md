@@ -30,12 +30,8 @@ class MyMain extends VLitElement {
 MyMain.done
 
 class MyPair extends VLitElement {
-	static props = ({
-		s, // observes global
-	}) => ({
-		k: 0, // property
-	})
-	render() {
+	static props = () => ({ k: 0 })
+	r(state) {
 		return html`
 			<button @click=${e => this.k++}>prop ${this.k}</button>
 			<button @click=${e => state.s++}>state ${state.s}</button> <br />
@@ -49,6 +45,56 @@ MyPair.done
 
 probable faqs:
 
+- where are Property options?  
+  they're still there in `static properties`. you can write it with `props`.
+  `props` defines a default reactive properties `{}` if it's nullish. defined
+  `properties` won't be overwritten. 
+
+  - what is the `state` argument? and why `r`?  
+  the best way to use state data is to use it from the argument of `r`. the 
+  argument is a proxy which will give you whatever you would got from the real 
+  state (which is exported and can be used by importing state. also `init` 
+  sets and returns to this state) but it will record whatever you used. 
+  here we use `state.s` from the argument so it tells that this component uses 
+  the state `s`. but if we'd just import `state` and use it then the result 
+  would be correct but changing it wouldn't reflect on the component. `r` is 
+  just a wrapper to pass the argument to `render`.
+
+- I want my shadow back  
+  `static shadow = true`
+
+- why the `.done` tho?  
+  this getter will make the dynamic properties from `props`, make the class
+  observe the state (manually defined ones) and define the tag. so you must 
+  `.done` after defining a class. 
+  (currently no way to pass other arguments to `customElements.define()`)
+
+also `VLitElement` is exported as `V` and `html` is exported as `v` if you're
+a lazy typer or don't want a 4 letter prefix when using in template literals
+
+---
+
+the older version of vlit used manual subscription for state. if you need to 
+define `render` rather than the wrapper `r`, it's possible this way.
+
+```js
+import { VLitElement, html, state } from "./vlit.js"
+
+class MyPair extends VLitElement {
+  static props = ({
+    s, // observes global state
+  }) => ({
+    k: 0, // reactive property
+  })
+  render() {
+    return html`
+      <button @click=${e => this.k++}>prop ${this.k}</button>
+      <button @click=${e => state.s++}>state ${state.s}</button> <br />
+    `
+  }
+}
+MyPair.done
+````
 - how does this `({ s }) => ({ k: 0 })` weird syntax work?  
   the one before arrow is argument deconstruction. a proxy is given as an
   argument and this way you are deconstructing the property `s` from it.
@@ -56,8 +102,8 @@ probable faqs:
 
   ```js
   proxy => {
-  	let s = proxy.s
-  	return { k: 0 }
+    let s = proxy.s
+    return { k: 0 }
   }
   ```
 
@@ -68,32 +114,14 @@ probable faqs:
   properties will be assigned to the element one-by-one so you don't have to
   write the properties in the constructor again.
 
-- where are Property options?  
-  they're still there in `static properties`. you can write it with `props`.
-  `props` defines a default reactive properties `{}` if it's nullish. defined
-  `properties` won't be overwritten. (I'm planning a nice way to add some in
-  the props)
+  - should I deconstruct what properties of state the element observes?  
+    no. if the parent element has `s` then all its inherited classes will
+    update when `state.s` is set. but for the default properties yes you
+    should. the best way is to make another function and use .
 
-- I want my shadow back  
-  `static shadow = true`
-
-- why the `.done` tho ?  
-  this getter will set the dynamic properties from `props`, make the class
-  observe the state and define your tag. so you must `.done` after defining
-  a class.
-  (currently no way to pass other arguments to `customElements.define()`)
-
-- should I deconstruct what properties of state the element observes?  
-  no. if the parent element has `s` then all its inherited classes will
-  update when `state.s` is set. but for the default properties yes you
-  should. the best way is to make another function and use .
-
-also `VLitElement` is exported as `V` and `html` is exported as `v` if you're
-a lazy typer or don't want a 4 letter prefix when using in template literals
-
----
 
 _I know it's a bit disgusting to see deconstructed properties from an 
 argument that aren't gonna be used but I just didn't want to write observing 
 state property names just in strings. Indeed it does look elegant to me - being 
-before the default property values and it has no default cuz uses the global._
+before the default property values and it has no default cuz uses the global. 
+also it's recommended to use first way with automatic subscription._
