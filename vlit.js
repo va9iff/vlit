@@ -1840,6 +1840,7 @@ const PascalToKebab = str =>
 	(str[0] + str.substring(1).replace(/[A-Z]/g, s => `-${s}`)).toLowerCase()
 
 const livingVLitElements = []
+window.livingVLitElements=livingVLitElements
 
 let _state = {}
 
@@ -1853,7 +1854,8 @@ export const state = new Proxy(
 			if (!_state.hasOwnProperty(prop)) console.error(`put ${prop} in the defineState() call before setting it`)
 			_state[prop] = value
 			for (const vlit of livingVLitElements){
-				vlit.requestUpdate()
+				if (vlit.constructor.observes.includes(prop))
+					vlit.requestUpdate()
 			}
 			return 1
 		},
@@ -1891,10 +1893,27 @@ export class VLitElement extends ct /*LitElement*/ {
 		for (const p in props){
 			this[p] = props[p]
 		}
+		const that = this
+		this.state = new Proxy({}, {
+			get(obj, prop){
+				that.usedStateProperties.push(prop)
+			},
+			set(obj, prop, value) {
+				state[prop] = value
+			}
+		})
+	}
+	usedStateProperties = []
+	render(){
+		return this.r(this.state)
+	}
+	r(state){
+		return html``
 	}
 	static get done() {
 		const that = this
 		this.properties = {...this.properties}
+		this.observes = [...this.observes]
 
 		// proxy to trigger get() with argument deconstruction
 		const stateSeeker = new Proxy( {}, {
