@@ -4,7 +4,7 @@ lit that is optimized to build things rapidly without ts.
 # Features
 
 - tag name is automatically set to the class name in kebab case
-- global state with simple syntax
+- global state with simple syntax and automatic subscription
 - declare reactive properties and set defaults in the same place
 - (no shadow dom by default (just add `static shadow = true`))
 
