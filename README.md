@@ -19,7 +19,7 @@ const state = init({
 })
 
 class MyMain extends VLitElement {
-	render() {
+	r(state) {
 		return html`
 			<my-pair></my-pair>
 			<my-pair></my-pair>
@@ -45,31 +45,34 @@ MyPair.done
 
 probable faqs:
 
-- where are Property options?  
-  they're still there in `static properties`. you can write it with `props`.
-  `props` defines a default reactive properties `{}` if it's nullish. defined
-  `properties` won't be overwritten. 
+- why `r` and not `render`?
+  `render` method will return a call of `r` method but with the `state` 
+  argument which is used for global state.
 
-  - what is the `state` argument? and why `r`?  
-  the best way to use state data is to use it from the argument of `r`. the 
-  argument is a proxy which will give you whatever you would got from the real 
-  state (which is exported and can be used by importing state. also `init` 
-  sets and returns to this state) but it will record whatever you used. 
-  here we use `state.s` from the argument so it tells that this component uses 
+- where are Property options?  
+  they're still there in `static properties` but you can also 
+  write it with `props`. it defines a default reactive properties with `{}` 
+  but if if you have options already in `properties` they won't be overwritten. 
+
+- what is the `state` argument? and why `r`?  
+  the argument is a proxy which will give you whatever you would got from 
+  the real state (which can be used by importing. also `init` sets and returns 
+  to this state) but it will record whatever you used in `render`. 
+  here we use `state.s` from the argument so it knows that this component uses 
   the state `s`. but if we'd just import `state` and use it then the result 
-  would be correct but changing it wouldn't reflect on the component. `r` is 
-  just a wrapper to pass the argument to `render`.
+  would be correct but changing the state wouldn't refresh the component. 
 
 - I want my shadow back  
   `static shadow = true`
 
 - why the `.done` tho?  
-  this getter will make the dynamic properties from `props`, make the class
-  observe the state (manually defined ones) and define the tag. so you must 
-  `.done` after defining a class. 
+  this getter will define the dynamic properties from `props` and define the 
+  tag. so you must `.done` after defining a class.  
+
+  (also makes the class observe the old way manually defined state in `props`)
   (currently no way to pass other arguments to `customElements.define()`)
 
-also `VLitElement` is exported as `V` and `html` is exported as `v` if you're
+`VLitElement` is also exported as `V` and `html` is exported as `v` if you're
 a lazy typer or don't want a 4 letter prefix when using in template literals
 
 ---
