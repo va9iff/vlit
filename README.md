@@ -75,7 +75,8 @@ a lazy typer or don't want a 4 letter prefix when using in template literals
 ---
 
 the older version of vlit used manual subscription for state. if you need to 
-define `render` rather than the wrapper `r`, it's possible this way.
+define `render` rather than the wrapper `r`, it's possible this way or get 
+the state in render simply by `this.state` or `const { state } = this`.
 
 ```js
 import { VLitElement, html, state } from "./vlit.js"

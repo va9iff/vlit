@@ -1840,7 +1840,6 @@ const PascalToKebab = str =>
 	(str[0] + str.substring(1).replace(/[A-Z]/g, s => `-${s}`)).toLowerCase()
 
 const livingVLitElements = []
-window.livingVLitElements=livingVLitElements
 
 let _state = {}
 
@@ -1851,7 +1850,6 @@ export const state = new Proxy(
 			return _state[prop]
 		},
 		set(obj, prop, value) {
-			if (!_state.hasOwnProperty(prop)) console.error(`put ${prop} in the defineState() call before setting it`)
 			_state[prop] = value
 			for (const vlit of livingVLitElements){
 				if (vlit.constructor.observes.includes(prop) || vlit.usedStateProperties.includes(prop))
@@ -1926,6 +1924,8 @@ export class VLitElement extends ct /*LitElement*/ {
 		})
 		const props = this.props(stateSeeker) 
 		for (const p in props){
+			if (_state.hasOwnProperty(p))
+				console.warn(`${p} - reactive property name with another existing state name`)
 			this.properties[p] ??= {}
 		}
 		customElements.define(PascalToKebab(this.name), this)
