@@ -1854,7 +1854,7 @@ export const state = new Proxy(
 			if (!_state.hasOwnProperty(prop)) console.error(`put ${prop} in the defineState() call before setting it`)
 			_state[prop] = value
 			for (const vlit of livingVLitElements){
-				if (vlit.constructor.observes.includes(prop))
+				if (vlit.constructor.observes.includes(prop) || vlit.usedStateProperties.includes(prop))
 					vlit.requestUpdate()
 			}
 			return 1
@@ -1889,17 +1889,19 @@ export class VLitElement extends ct /*LitElement*/ {
 	}
 	constructor(){
 		super()
+		const that = this
 		let props = this.constructor.props({})
 		for (const p in props){
 			this[p] = props[p]
 		}
-		const that = this
 		this.state = new Proxy({}, {
 			get(obj, prop){
 				that.usedStateProperties.push(prop)
+				return state[prop]
 			},
 			set(obj, prop, value) {
 				state[prop] = value
+				return true
 			}
 		})
 	}
