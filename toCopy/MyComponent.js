@@ -1,16 +1,14 @@
-import { V, v, state } from "../vlit.js"
+import { V, v } from "../vlit.js"
 
 class MyComponent extends V {
-	static props = ({
-
-	}) => ({
+	static props = () => ({
 
 	})
-	render(){
+	r(state){
 		return v`
 
 		`
 	}
 }
-MyComponent.done
 
+MyComponent.done
