@@ -1,11 +1,6 @@
 import { V, v } from "./vlit.js"
 
-console.log(';hi')
-
 /*
-
-	TODO: global state listeners
-
 	TODO: add tag setter to not write the tag class name twice
 	tags.MyComponent = class extends V {} // yes disables export but can be rewritten with export easily when needed
 */
@@ -16,15 +11,12 @@ export class MyInput extends V {
 			<br>
 			<br>
 			<br>
-			<input type="text">
-			<button @click=${this.setName}>change global state</button>
+			<input type="text" @change=${this.setName}>
 		`
 	}
 	setName(e){
-		const {state} = this
+		const { state } = this
 		state.name = e.target.value
-
-		document.querySelector('my-component').update() //!!!!
 	}
 }
 MyInput.done
@@ -35,7 +27,9 @@ export class MyComponent extends V {
 		name = "user name"
 	}
 	render() {
+		console.log('hi')
 		const { state } = this
+		console.log(state.name)
 		return v`
 			<button @click = ${this.changeName}>
 				${this.name}
@@ -47,11 +41,7 @@ export class MyComponent extends V {
 		const { state } = this
 		this.name += "hi"
 	}
-	// when element disconnected from dom, 
 }
-
-// sets up static properties for reactive props
-// defines component in a kebab-case form of the class name
 MyComponent.done
 
 
