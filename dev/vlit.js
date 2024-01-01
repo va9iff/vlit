@@ -11,6 +11,21 @@ let pascalToKebab = s => s.replace(/([a-z0–9])([A-Z])/g, "$1-$2").toLowerCase(
 const realState = {}
 const livingVLitElements = []
 
+export function setStateKey(prop, value) {
+	realState[prop] = value
+	for (const listner of livingVLitElements) 
+		if (listner.listeningStateKeys.includes(prop))
+			listner.requestUpdate()
+}
+
+export function setState(obj) {
+	for (let key in obj) setStateKey(key, obj[key])
+}
+
+export function getState() {
+	return realState
+}
+
 export class V extends LitElement{
 	static props = class {}
 	static properties = {}
@@ -36,10 +51,7 @@ export class V extends LitElement{
 				return realState[prop]
 			},
 			set(obj, prop, value) {
-				realState[prop] = value
-				for (const listner of livingVLitElements) 
-					if (listner.listeningStateKeys.includes(prop))
-						listner.requestUpdate()
+				setStateKey(prop, value)
 				return true
 			}
 		})

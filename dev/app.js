@@ -1,9 +1,8 @@
-import { V, v, tag } from "./vlit.js"
+import { V, v, tag, setState } from "./vlit.js"
 
-/*
-	TODO: add tag setter to not write the tag class name twice
-	tags.MyComponent = class extends V {} // yes disables export but can be rewritten with export easily when needed
-*/
+setState({
+	name: "user name"
+})
 
 export class MyInput extends V {
 	render() {
