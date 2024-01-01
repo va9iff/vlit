@@ -14,10 +14,13 @@ const livingVLitElements = []
 export class V extends LitElement{
 	static props = class {}
 	static properties = {}
-	static get done(){
+	static define(tagName, options = {}) {
 		this.properties = { ...this.properties } // kinda dirty
 		for (let key in new this.props) this.properties[key] = {}
-		customElements.define(pascalToKebab(this.name), this)
+		customElements.define(tagName, this, options)
+	}
+	static get done(){
+		this.define(pascalToKebab(this.name))
 	}
 	listeningStateKeys = []
 	constructor(){
@@ -58,3 +61,10 @@ export class V extends LitElement{
 		return this
 	}
 }
+
+export const tag = new Proxy({}, {
+	set(obj, prop, value) {
+		value.define(pascalToKebab(prop))
+		return true
+	}
+})

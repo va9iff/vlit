@@ -1,4 +1,4 @@
-import { V, v } from "./vlit.js"
+import { V, v, tag } from "./vlit.js"
 
 /*
 	TODO: add tag setter to not write the tag class name twice
@@ -22,7 +22,7 @@ export class MyInput extends V {
 MyInput.done
 
 
-export class MyComponent extends V {
+tag.MyComponent = class extends V {
 	static props = class {
 		name = "user name"
 	}
@@ -42,7 +42,6 @@ export class MyComponent extends V {
 		this.name += "hi"
 	}
 }
-MyComponent.done
 
 
 const el = document.createElement("my-component")
